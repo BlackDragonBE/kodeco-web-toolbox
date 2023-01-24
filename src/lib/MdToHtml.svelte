@@ -1,11 +1,19 @@
 <script>
-  import { convert } from './MdConverter.js';
-  var md = '';
-  var html = '';
+  import MdConverter from './MdConverter.svelte';
+
+  let converter;
+  let md = '';
+  let html = '';
   let errors = [];
 
+  $: if (md.length > 0) {
+    // Convert md to html every time md changes
+    convertToHtml();
+  }
+
   function convertToHtml() {
-    convert(md)
+    converter
+      .convert(md)
       .then((output) => {
         html = output.html;
         errors = output.errorUrls;
@@ -32,32 +40,32 @@
 
   function dropMarkdown(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.files[0];
+    let data = ev.dataTransfer.files[0];
     data.text().then((result) => {
       md = result;
     });
   }
 </script>
 
-<h2>Markdown to HTML</h2>
+<div class="content">
+<h4 class="m-1">Markdown</h4>
+<textarea class="textarea" id="md" name="md" rows="10" cols="100" placeholder="Paste markdown here or drag a markdown file to this area" bind:value={md} on:drop={dropMarkdown} on:dragover={allowDrop} />
+<p />
+<MdConverter bind:this={converter} />
+<h4>HTML</h4>
+<textarea class="textarea" id="html" name="html" rows="10" cols="100" readonly placeholder="HTML result will show up here" bind:value={html} />
+<p />
 
-<h3>Markdown</h3>
-<textarea id="md" name="md" rows="10" cols="100" placeholder="Paste markdown here or drag a markdown file to this area" bind:value={md} on:drop={dropMarkdown} on:dragover={allowDrop} />
-<p />
-<button on:click={convertToHtml}> Convert markdown to Kodeco HTML</button>
-<p />
-<h3>HTML</h3>
-<textarea id="html" name="html" rows="10" cols="100" readonly placeholder="HTML result will show up here" bind:value={html} />
-<p />
 {#if html.length > 0}
-  <button on:click={copyToClipboard}> Copy HTML to clipboard</button>
+  <button class="button" on:click={copyToClipboard}> Copy HTML to clipboard</button>
 {/if}
 
 {#if errors.length > 0}
-  <p>URL Errors:</p>
+  <p>The URLs below couldn't be found. Make sure you've uploaded your images to the <a href="https://www.kodeco.com/wp-admin/upload.php">Media Library</a> before converting.</p>
+  <ul>
   {#each errors as err}
-    <div>
-      URL not found: {err}
-    </div>
+      <li>{err}</li>
   {/each}
+  </ul>
 {/if}
+</div>
