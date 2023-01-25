@@ -12,8 +12,7 @@ npm run dev
 ### Deploy to gh-pages
 
 ```
-npm run build
-npm run deploy
+npm run build && npm run deploy
 ```
 
 ## Used packages
