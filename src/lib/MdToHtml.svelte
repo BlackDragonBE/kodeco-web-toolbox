@@ -58,7 +58,7 @@
   }
 </script>
 
-<div class="column is-3 section">
+<div class="column is-2-desktop is-12-tablet section">
   <div class="card">
     <header class="card-header">
       <p class="card-header-title">Settings</p>
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">Image upload month</label>
+          <label for="" class="label">Image upload month</label>
           <div class="control">
             <input class="input" type="month" bind:value={imageUploadMonth} />
           </div>
@@ -91,25 +91,25 @@
     </header>
     <div class="card-content">
       <div class="content">
-        <label class="label">Markdown</label>
+        <label for="" class="label">Markdown</label>
         <textarea class="textarea" id="md" name="md" rows="5" cols="100" bind:value={md} on:drop={dropMarkdown} on:dragover|preventDefault />
-        <p class="help">Drag a markdown file above or paste markdown</p>
+        <p class="help">Drag a markdown file above or paste markdown to start converting! You can do a manual re-conversion with the button below.</p>
         <p />
-		<div class="columns is-mobile is-centered has-text-centered">
-            <div class="column is-half">
-              <button class="button is-primary" on:click={convertToHtml}>
-                <span class="icon">
-                  <i class="fas fa-bolt" />
-                </span>
-                <span>Convert to HTML</span></button
-              >
-            </div>
+        <div class="columns is-mobile is-centered has-text-centered">
+          <div class="column is-half">
+            <button class="button is-primary" on:click={convertToHtml}>
+              <span class="icon">
+                <i class="fas fa-bolt" />
+              </span>
+              <span>Convert to HTML</span></button
+            >
           </div>
+        </div>
 
         <MdConverter bind:this={converter} />
 
         {#if html.length > 0}
-          <h4>HTML</h4>
+          <label for="" class="label">HTML</label>
           <textarea class="textarea" id="html" name="html" rows="5" cols="100" readonly placeholder="HTML result will show up here" bind:value={html} />
           <p />
           <div class="columns is-mobile is-centered has-text-centered">
@@ -130,7 +130,10 @@
               <span class="icon">
                 <i class="fas fa-circle-exclamation" />
               </span>
-              <span>The URLs below couldn't be found. Make sure you've uploaded your images to the <a href="https://www.kodeco.com/wp-admin/upload.php">Media Library</a> before converting.</span>
+              <span
+                >The URLs below couldn't be found.<br />
+                Make sure you've uploaded your images to the <a href="https://www.kodeco.com/wp-admin/upload.php">Media Library</a> before converting and set up the correct upload month in the settings.</span
+              >
             </span>
             {#each errors as err}
               <div class="card listcard p-2 my-2">{err}</div>

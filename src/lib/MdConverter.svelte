@@ -24,7 +24,6 @@
       doc = imageConvertOutput.doc;
       let errorUrls = imageConvertOutput.errorUrls;
 
-
       html = doc.body.innerHTML;
       html = performFinalCleanup(html);
 
@@ -71,10 +70,10 @@
         resolve(output);
       }
 
-    //   const today = new Date();
-    //   const year = today.getFullYear();
-    //   const month = today.getMonth() + 1; // getMonth() returns a 0-based index, so we need to add 1 to get the actual month number
-    //   const formattedDate = year + '/' + (month < 10 ? '0' + month : month);
+      //   const today = new Date();
+      //   const year = today.getFullYear();
+      //   const month = today.getMonth() + 1; // getMonth() returns a 0-based index, so we need to add 1 to get the actual month number
+      //   const formattedDate = year + '/' + (month < 10 ? '0' + month : month);
 
       let mediaUrl = 'https://files.koenig.kodeco.com/uploads/' + year + '/' + month + '/';
 
@@ -87,7 +86,9 @@
         let fileName = urlParts[urlParts.length - 1];
 
         // Replace local with remote image url
-        imgElements[i].src = mediaUrl + fileName;
+        if (!imgElements[i].src.startsWith('http') || !imgElements[i].src.startsWith('www')) {
+          imgElements[i].src = mediaUrl + fileName;
+        }
 
         // Add image classes
         imgElements[i].className = 'aligncenter bordered size-full';
@@ -132,8 +133,8 @@
   }
 
   function performFinalCleanup(html) {
-	html = html.replaceAll('<br>', '');
-	html = html.trim();
+    html = html.replaceAll('<br>', '');
+    html = html.trim();
     return html;
   }
 </script>

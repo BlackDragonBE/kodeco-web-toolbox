@@ -14,28 +14,29 @@
 
 <!-- <h1 class="title">Kodeco Web Toolbox</h1> -->
 
-<div class="columns">
+<div class="columns is-desktop">
   <aside class="column is-narrow section">
     <p class="menu-label is-hidden-touch">Menu</p>
     <ul class="menu-list">
       <li>
-        <a href="#" class="is-active">
-          <span class="icon"><i class="fa-brands fa-markdown" /></span> Markdown to HTML
+        <a href="#/" class="is-active">
+          <span class="icon"><i class="fa-brands fa-markdown" /></span> MD <span class="icon"><i class="fas fa-arrow-right" /></span> HTML
         </a>
       </li>
       <li>
-        <a href="#" class="is-hidden">
-          <span class="icon"><i class="fa-brands fa-html5" /></span> HTML to Markdown
+        <a href="#/" class="">
+          <span class="icon"><i class="fa-brands fa-html5" /></span> HTML <span class="icon"><i class="fas fa-arrow-right" /></span> MD
         </a>
       </li>
       <li>
-        <a href="#" class="is-hidden">
+        <a href="#/" class="">
           <span class="icon"><i class="fa fa-info" /></span> About
         </a>
       </li>
     </ul>
   </aside>
 
-  <MdToHtml />
-
+  {#if appMode == Mode.MdToHtml}
+    <MdToHtml />
+  {/if}
 </div>
