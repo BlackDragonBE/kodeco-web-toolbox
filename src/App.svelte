@@ -8,19 +8,16 @@
   const Mode = {
     MdToHtml: Symbol('md_to_html'),
     HtmlToMd: Symbol('html_to_md'),
+    TrelloReport: Symbol('trello_report'),
     About: Symbol('about'),
   };
 
   let appMode = Mode.MdToHtml;
 
-  onMount(async () => {
-
-  });
+  onMount(async () => {});
 </script>
 
 <!-- <h1 class="title">Kodeco Web Toolbox</h1> -->
-
-
 
 <div class="columns is-desktop">
   <aside class="column is-narrow section">
@@ -47,6 +44,18 @@
           }}
         >
           <span class="icon"><i class="fa-brands fa-html5" /></span> HTML <span class="icon"><i class="fas fa-arrow-right" /></span> MD
+        </a>
+      </li>
+      <li class="is-hidden">
+        <a
+          href="#/"
+          class=""
+          class:is-active={appMode == Mode.TrelloReport}
+          on:click={() => {
+            appMode = Mode.TrelloReport;
+          }}
+        >
+          <span class="icon"><i class="fa-brands fa-trello" /></span> Trello Reporter
         </a>
       </li>
       <li>
