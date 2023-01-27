@@ -95,28 +95,28 @@
         let fileName = urlParts[urlParts.length - 1];
 
         // Replace local with remote image url
-        if (!imgElements[i].src.startsWith('http') || !imgElements[i].src.startsWith('www')) {
+        if (!imgElements[i].src.startsWith('http') && !imgElements[i].src.startsWith('www')) {
           imgElements[i].src = mediaUrl + fileName;
         }
 
         // Add image classes
         imgElements[i].className = 'aligncenter size-full';
 
-		if (imageBorders) {
-			imgElements[i].className += " bordered";
-		}
+        if (imageBorders) {
+          imgElements[i].className += ' bordered';
+        }
 
-        imageExists(mediaUrl + fileName).then(function (exists) {
+        imageExists(imgElements[i].src).then(function (exists) {
           resolvedPromises++;
           progress = (resolvedPromises / imgElements.length) * 100;
 
           if (!exists) {
-            errorUrls.push(mediaUrl + fileName);
+            errorUrls.push(imgElements[i].src);
           }
 
           if (resolvedPromises === totalPromises) {
             //All promises have been resolved
-            console.log('All images checked');
+            // console.log('All images checked');
 
             var output = {
               doc: doc,
@@ -209,7 +209,7 @@
         .filter((p) => p != null);
       problemsFound.push(...spellingProblems);
 
-	  // Sections
+      // Sections
       if (!markdown.includes('Where to Go From Here')) {
         problemsFound.push('Section not found: Where to Go From Here. Please add this section.');
       }

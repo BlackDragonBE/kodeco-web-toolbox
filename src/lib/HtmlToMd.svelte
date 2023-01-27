@@ -14,6 +14,8 @@
   }
 
   function convertToMarkdown() {
+	md = '';
+
     converter
       .convert(html)
       .then((output) => {

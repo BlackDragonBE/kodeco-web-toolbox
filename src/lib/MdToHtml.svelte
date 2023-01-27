@@ -29,6 +29,8 @@
   }
 
   function convertToHtml() {
+	html = '';
+
     converter
       .convert(md, selectedYear, selectedMonth, addBorderToImages)
       .then((output) => {
