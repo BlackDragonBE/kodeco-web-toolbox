@@ -20,6 +20,8 @@
 
 <!-- <h1 class="title">Kodeco Web Toolbox</h1> -->
 
+
+
 <div class="columns is-desktop">
   <aside class="column is-narrow section">
     <p class="menu-label is-hidden-touch">Menu</p>
@@ -38,7 +40,7 @@
       <li>
         <a
           href="#/"
-          class="is-hidden"
+          class=""
           class:is-active={appMode == Mode.HtmlToMd}
           on:click={() => {
             appMode = Mode.HtmlToMd;
