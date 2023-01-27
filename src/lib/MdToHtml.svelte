@@ -125,37 +125,41 @@
         {/if}
 
         {#if urlErrors.length > 0}
-          <div class="notification is-danger mt-2">
-            <span class="icon-text">
-              <span class="icon">
-                <i class="fas fa-circle-exclamation" />
-              </span>
-              <span
-                >The URLs below couldn't be found.<br />
-                Make sure you've uploaded your images to the <a href="https://www.kodeco.com/wp-admin/upload.php">Media Library</a> before converting and set up the correct upload month in the settings.</span
-              >
-            </span>
-            {#each urlErrors as err}
-              <div class="card listcard p-2 my-2">{err}</div>
-            {/each}
-          </div>
+          <article class="message is-danger is-small">
+            <div class="message-header">
+              <p>
+                <span class="icon">
+                  <i class="fas fa-circle-exclamation" />
+                </span>URL Errors
+              </p>
+            </div>
+            <div class="message-body">
+              The URLs below couldn't be found.<br />
+              Make sure you've uploaded your images to the <a href="https://www.kodeco.com/wp-admin/upload.php">Media Library</a> before converting and set up the correct upload month in the settings.
+              {#each urlErrors as err}
+                <div class="card listcard p-2 my-2">{err}</div>
+              {/each}
+            </div>
+          </article>
         {/if}
 
-		{#if scanErrors.length > 0}
-		<div class="notification is-danger mt-2">
-		  <span class="icon-text">
-			<span class="icon">
-			  <i class="fas fa-circle-exclamation" />
-			</span>
-			<span
-			  >While scanning the content of the markdown, the following errors were found:</span
-			>
-		  </span>
-		  {#each scanErrors as err}
-			<div class="card listcard p-2 my-2">{err}</div>
-		  {/each}
-		</div>
-	  {/if}
+        {#if scanErrors.length > 0}
+          <article class="message is-danger is-small">
+            <div class="message-header">
+              <p>
+                <span class="icon">
+                  <i class="fas fa-circle-exclamation" />
+                </span>Markdown Scanner Errors
+              </p>
+            </div>
+            <div class="message-body">
+              While scanning the content of the markdown, the following errors were found:
+              {#each scanErrors as err}
+                <div class="card listcard p-2 my-2">{err}</div>
+              {/each}
+            </div>
+          </article>
+        {/if}
       </div>
     </div>
   </div>
