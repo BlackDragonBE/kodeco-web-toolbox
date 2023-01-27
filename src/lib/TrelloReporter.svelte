@@ -80,6 +80,17 @@
     </header>
     <div class="card-content">
       <div class="content">
+        <article class="message is-warning is-small">
+          <div class="message-header">
+            <p>
+              <span class="icon">
+                <i class="fas fa-circle-exclamation" />
+              </span>Here be dragons
+            </p>
+          </div>
+          <div class="message-body">This feature isn't fully implemented yet.</div>
+        </article>
+
         {#if settingsFilledIn}
           <div class="columns is-mobile is-centered has-text-centered">
             <div class="column is-half">
@@ -92,7 +103,12 @@
             </div>
           </div>
         {:else}
-          <p>Fill in the settings first.</p>
+          <article class="message is-info is-small">
+            <div class="message-header">
+              <p>Missing information</p>
+            </div>
+            <div class="message-body">Fill in the settings first.</div>
+          </article>
         {/if}
       </div>
     </div>

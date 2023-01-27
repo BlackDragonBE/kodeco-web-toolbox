@@ -3,6 +3,10 @@
 @import 'https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css';
 
+body {
+  padding: 1em;
+}
+
 /* body {
   margin: 0;
   display: flex;
@@ -23,15 +27,14 @@
   word-wrap: break-word;
 }
 
-
 /* Small screens */
 @media only screen and (max-width: 1024px) {
-	.section {
-		padding-top: 1em;
-		padding-bottom: 1em;
-	}
+  .section {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
 
-	.logo {
-		margin-bottom: 1em;
-	}
+  .logo {
+    margin-bottom: 1em;
+  }
 }
