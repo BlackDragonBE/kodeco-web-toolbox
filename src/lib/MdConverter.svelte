@@ -95,7 +95,7 @@
         let fileName = urlParts[urlParts.length - 1];
 
         // Replace local with remote image url
-        if (!imgElements[i].src.startsWith('http') && !imgElements[i].src.startsWith('www')) {
+        if (imgElements[i].src.startsWith('http://localhost')) {
           imgElements[i].src = mediaUrl + fileName;
         }
 
