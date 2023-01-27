@@ -26,16 +26,19 @@
       doc = imageConvertOutput.doc;
       let errorUrls = imageConvertOutput.errorUrls;
 
+      let scanErrors = await scanMarkdown(markdown);
+
       html = doc.body.innerHTML;
       html = performFinalCleanup(html);
 
-    //   const turndownService = new TurndownService();
-    //   @ts-ignore
-    //   console.log(turndownService.turndown(html));
+      //   const turndownService = new TurndownService();
+      //   @ts-ignore
+      //   console.log(turndownService.turndown(html));
 
       let output = {
         html: html,
         errorUrls: errorUrls,
+        scanErrors: scanErrors,
       };
 
       resolve(output);
@@ -142,6 +145,68 @@
     html = html.replaceAll('<br>', '');
     html = html.trim();
     return html;
+  }
+
+  async function scanMarkdown(markdown) {
+    return new Promise(async (resolve, reject) => {
+      let problemsFound = [];
+
+      // Load british word dict
+      let britishAmericanWordsDict = await fetch('markdown-scanner/british-american.csv')
+        .then((response) => response.text())
+        .then((data) => {
+          const rows = data.split('\n');
+          const csvAsDict = rows.reduce((acc, row) => {
+            const [key, value] = row.split(',');
+            acc[key] = value;
+            return acc;
+          }, {});
+          return csvAsDict;
+        });
+
+      // Load misspelling word dict
+      let misspellingDict = await fetch('markdown-scanner/misspelling.csv')
+        .then((response) => response.text())
+        .then((data) => {
+          const rows = data.split('\n');
+          const csvAsDict = rows.reduce((acc, row) => {
+            const [key, value] = row.split(',');
+            acc[key] = value;
+            return acc;
+          }, {});
+          return csvAsDict;
+        });
+
+      // Scan words
+      let words = markdown.match(/[\w']+/g);
+
+	  // British > American
+      let britishWordProblems = words
+        .map(function (word) {
+          if (word.toLowerCase() in britishAmericanWordsDict) {
+            let american = britishAmericanWordsDict[word.toLowerCase()];
+            return "British word found: '" + word + "'. Please replace this with '" + american + "'.";
+          }
+          return null;
+        })
+        .filter((p) => p != null);
+      problemsFound.push(...britishWordProblems);
+
+	  // Misspelled > correct
+	  let spellingProblems = words
+        .map(function (word) {
+          if (word.toLowerCase() in misspellingDict) {
+            let correctSpelling = misspellingDict[word.toLowerCase()];
+            return "Misspelled word found: '" + word + "'. Please replace this with '" + correctSpelling + "'.";
+          }
+          return null;
+        })
+        .filter((p) => p != null);
+      problemsFound.push(...spellingProblems);
+
+    //   console.log(problemsFound);
+      resolve(problemsFound);
+    });
   }
 </script>
 

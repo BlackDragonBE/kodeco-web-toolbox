@@ -4,7 +4,8 @@
   let converter;
   let md = '';
   let html = '';
-  let errors = [];
+  let urlErrors = [];
+  let scanErrors = [];
 
   // Options
   const today = new Date();
@@ -31,9 +32,8 @@
       .convert(md, selectedYear, selectedMonth)
       .then((output) => {
         html = output.html;
-        errors = output.errorUrls;
-        console.log('Errors');
-        console.log(errors);
+        urlErrors = output.errorUrls;
+        scanErrors = output.scanErrors;
       })
       .catch((err) => {
         console.error(err);
@@ -124,7 +124,7 @@
           </div>
         {/if}
 
-        {#if errors.length > 0}
+        {#if urlErrors.length > 0}
           <div class="notification is-danger mt-2">
             <span class="icon-text">
               <span class="icon">
@@ -135,11 +135,27 @@
                 Make sure you've uploaded your images to the <a href="https://www.kodeco.com/wp-admin/upload.php">Media Library</a> before converting and set up the correct upload month in the settings.</span
               >
             </span>
-            {#each errors as err}
+            {#each urlErrors as err}
               <div class="card listcard p-2 my-2">{err}</div>
             {/each}
           </div>
         {/if}
+
+		{#if scanErrors.length > 0}
+		<div class="notification is-danger mt-2">
+		  <span class="icon-text">
+			<span class="icon">
+			  <i class="fas fa-circle-exclamation" />
+			</span>
+			<span
+			  >While scanning the content of the markdown, the following errors were found:</span
+			>
+		  </span>
+		  {#each scanErrors as err}
+			<div class="card listcard p-2 my-2">{err}</div>
+		  {/each}
+		</div>
+	  {/if}
       </div>
     </div>
   </div>

@@ -3,6 +3,7 @@
   import Counter from './lib/Counter.svelte';
   import HtmlToMd from './lib/HtmlToMd.svelte';
   import MdToHtml from './lib/MdToHtml.svelte';
+  import { onMount } from 'svelte';
 
   const Mode = {
     MdToHtml: Symbol('md_to_html'),
@@ -11,6 +12,10 @@
   };
 
   let appMode = Mode.MdToHtml;
+
+  onMount(async () => {
+
+  });
 </script>
 
 <!-- <h1 class="title">Kodeco Web Toolbox</h1> -->
@@ -33,7 +38,7 @@
       <li>
         <a
           href="#/"
-		  class="is-hidden"
+          class="is-hidden"
           class:is-active={appMode == Mode.HtmlToMd}
           on:click={() => {
             appMode = Mode.HtmlToMd;
