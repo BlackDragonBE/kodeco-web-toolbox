@@ -95,7 +95,7 @@
         let fileName = urlParts[urlParts.length - 1];
 
         // Replace local with remote image url
-        if (imgElements[i].src.startsWith('http://localhost')) {
+        if (!imgElements[i].src.includes('/uploads/')) {
           imgElements[i].src = mediaUrl + fileName;
         }
 
@@ -106,7 +106,7 @@
           imgElements[i].className += ' bordered';
         }
 
-        imageExists(imgElements[i].src).then(function (exists) {
+        checkIfImageExists(imgElements[i].src).then(function (exists) {
           resolvedPromises++;
           progress = (resolvedPromises / imgElements.length) * 100;
 
@@ -130,7 +130,7 @@
     });
   }
 
-  function imageExists(url) {
+  function checkIfImageExists(url) {
     return new Promise(function (resolve, reject) {
       let image = new Image();
       image.onload = function () {
