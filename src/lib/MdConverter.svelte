@@ -1,5 +1,6 @@
 <script>
   import { Converter, setOption } from 'showdown';
+  import TurndownService from 'turndown';
 
   let progress = 0;
 
@@ -14,6 +15,7 @@
 
       let html = '';
       html = converter.makeHtml(markdown);
+
       // Simple replaces
       html = performSimpleReplacements(html);
 
@@ -26,6 +28,10 @@
 
       html = doc.body.innerHTML;
       html = performFinalCleanup(html);
+
+    //   const turndownService = new TurndownService();
+    //   @ts-ignore
+    //   console.log(turndownService.turndown(html));
 
       let output = {
         html: html,
