@@ -76,7 +76,7 @@
         <p class="help">Drag an html file above or paste html from the edit page (e.g. https://www.kodeco.com/wp-admin/post.php?post=00000&action=edit) on WordPress to start converting! You can do a manual re-conversion with the button below.</p>
         <p />
         <div class="columns is-mobile is-centered has-text-centered">
-          <div class="column is-half">
+          <div class="column">
             <button class="button is-primary" on:click={convertToMarkdown}>
               <span class="icon">
                 <i class="fas fa-bolt" />
@@ -93,7 +93,7 @@
           <textarea class="textarea is-small" id="md" name="md" rows="5" cols="100" readonly placeholder="Markdown result will show up here" bind:value={md} />
           <p />
           <div class="columns is-mobile is-centered has-text-centered">
-            <div class="column is-half">
+            <div class="column">
               <button class="button is-primary" on:click={copyToClipboard}>
                 <span class="icon">
                   <i class="fas fa-copy" />

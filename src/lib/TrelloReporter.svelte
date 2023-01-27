@@ -4,36 +4,57 @@
 
   let settingsFilledIn;
 
-  let apiKey = localStorage.getItem('apiKey');
-  let token = localStorage.getItem('token');
-  let boardId = localStorage.getItem('boardId');
+  let apiKey = localStorage.getItem('apiKey') || '';
+  let token = localStorage.getItem('token') || '';
+  let boardId = localStorage.getItem('boardId') || '';
+  let reportLists = [];
+  let reportListsText = '';
+
+  if (localStorage.getItem('reportLists')) {
+    reportLists = JSON.parse(localStorage.getItem('reportLists'));
+    reportLists.forEach((list) => {
+      reportListsText += list + '\n';
+    });
+    reportListsText = reportListsText.trim();
+  } else {
+    reportLists = ['Author: Outline', 'Author: Sample Project', 'Author: Writing', 'FPE: Spot Check', 'Tech Editor: Tech Edit', 'Editor: Edit', 'FPE: Final Pass Edit', 'Team Lead: Review & Schedule'];
+    reportLists.forEach((list) => {
+      reportListsText += list.trim() + '\n';
+    });
+    reportListsText = reportListsText.trim();
+  }
 
   $: localStorage.setItem('apiKey', apiKey);
   $: localStorage.setItem('token', token);
   $: localStorage.setItem('boardId', boardId);
+  $: if (reportListsText.length > 0) {
+    reportLists = reportListsText.split('\n');
+    localStorage.setItem('reportLists', JSON.stringify(reportLists));
+  }
 
   $: settingsFilledIn = apiKey.length > 10 && token.length > 10 && boardId.length > 4;
 
-  let listsToReportOn = [
-    'Author: Outline',
-    'Author: Sample Project',
-    'Author: Writing',
-    'FPE: Spot Check',
-    'Tech Editor: Tech Edit',
-    'Editor: Edit',
-    'FPE: Final Pass Edit',
-    'Team Lead: Review & Schedule',
-  ];
+  let boardMembers = [];
+  let boardLists = [];
 
   // Any card with a name in this list will be ignored. This is useful to filter out utility or informational cards.
   let ignoredCardTitles = ['How do I do an FPE Spot Check?', 'How to Assign An Editor'];
 
-  function getBoardData() {
+  function createBoardReport() {
+    // Members
+    // fetch(`https://api.trello.com/1/boards/${boardId}/members?key=${apiKey}&token=${token}`)
+    //   .then((response) => response.json())
+    //   .then((members) => {
+    //     boardMembers = members;
+    //     console.log(boardMembers);
+    //   });
+
+    // Lists
     fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${apiKey}&token=${token}&cards=all&filter=open`)
       .then((response) => response.json())
       .then((lists) => {
-        console.log(lists);
-        // Do something with the lists here
+        boardLists = lists;
+        console.log(boardLists);
       });
   }
 </script>
@@ -68,6 +89,10 @@
             <input class="input" bind:value={boardId} />
           </div>
         </div>
+        <div class="field">
+          <label for="" class="label">Board lists to report</label>
+          <textarea rows="10" class="textarea is-small auto_height" bind:value={reportListsText} />
+        </div>
       </div>
     </div>
   </div>
@@ -93,13 +118,16 @@
 
         {#if settingsFilledIn}
           <div class="columns is-mobile is-centered has-text-centered">
-            <div class="column is-half">
-              <button class="button is-primary" on:click={getBoardData}>
+            <div class="column">
+              <button class="button is-primary" on:click={createBoardReport}>
                 <span class="icon">
                   <i class="fas fa-bolt" />
                 </span>
-                <span>Get board data</span></button
+                <span>Create board report</span></button
               >
+              {#each boardLists as list}
+                <div class="card listcard p-2 my-2">{list.name}</div>
+              {/each}
             </div>
           </div>
         {:else}

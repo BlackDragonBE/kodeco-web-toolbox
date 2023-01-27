@@ -94,14 +94,14 @@
     </header>
     <div class="card-content">
       <div class="content">
-		<p class="help">Before converting your markdown, select all image files you're using for your article and drag them to the <a href="https://www.kodeco.com/wp-admin/upload.php"> WordPressMedia Library</a> for bulk uploading.<br>
+		<p class="help">Before converting your markdown, select all image files you're using for your article and drag them to the <a href="https://www.kodeco.com/wp-admin/upload.php"> WordPress Media Library</a> for bulk uploading.<br>
 		The converter will find the images and replace any local image paths with the image URLs automatically.</p>
         <label for="" class="label">Markdown</label>
         <textarea class="textarea is-small" id="md" name="md" rows="5" cols="100" bind:value={md} on:drop={dropMarkdown} on:dragover|preventDefault />
         <p class="help">Drag a markdown file above or paste markdown to start converting! You can do a manual re-conversion with the button below.</p>
         <p />
         <div class="columns is-mobile is-centered has-text-centered">
-          <div class="column is-half">
+          <div class="column">
             <button class="button is-primary" on:click={convertToHtml}>
               <span class="icon">
                 <i class="fas fa-bolt" />
@@ -118,7 +118,7 @@
           <textarea class="textarea is-small" id="html" name="html" rows="5" cols="100" readonly placeholder="HTML result will show up here" bind:value={html} />
           <p />
           <div class="columns is-mobile is-centered has-text-centered">
-            <div class="column is-half">
+            <div class="column">
               <button class="button is-primary" on:click={copyToClipboard}>
                 <span class="icon">
                   <i class="fas fa-copy" />
