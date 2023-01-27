@@ -1,8 +1,8 @@
 <script>
   import About from './lib/About.svelte';
-  import Counter from './lib/Counter.svelte';
   import HtmlToMd from './lib/HtmlToMd.svelte';
   import MdToHtml from './lib/MdToHtml.svelte';
+  import TrelloReporter from './lib/TrelloReporter.svelte';
   import { onMount } from 'svelte';
 
   const Mode = {
@@ -17,8 +17,8 @@
   onMount(async () => {});
 </script>
 
-<!-- <h1 class="title">Kodeco Web Toolbox</h1> -->
 
+<img class="logo mt-1 mx-4" src="images/kodeco-toolbox.png" alt="Kodeco Web Toolbox">
 <div class="columns is-desktop">
   <aside class="column is-narrow section">
     <p class="menu-label is-hidden-touch">Menu</p>
@@ -46,7 +46,7 @@
           <span class="icon"><i class="fa-brands fa-html5" /></span> HTML <span class="icon"><i class="fas fa-arrow-right" /></span> MD
         </a>
       </li>
-      <li class="is-hidden">
+      <li>
         <a
           href="#/"
           class=""
@@ -76,6 +76,8 @@
     <MdToHtml />
   {:else if appMode == Mode.HtmlToMd}
     <HtmlToMd />
+  {:else if appMode == Mode.TrelloReport}
+    <TrelloReporter />
   {:else if appMode == Mode.About}
     <About />
   {/if}

@@ -61,7 +61,7 @@
   }
 </script>
 
-<div class="column is-2-desktop is-12-tablet section">
+<div class="column is-3-desktop is-12-tablet section">
   <div class="card">
     <header class="card-header">
       <p class="card-header-title">Settings</p>
