@@ -8,6 +8,7 @@
   let scanErrors = [];
 
   // Options
+  let addBorderToImages = true;
   const today = new Date();
   const thisYear = today.getFullYear();
   const thisMonth = today.getMonth() + 1; // getMonth() returns a 0-based index, so we need to add 1 to get the actual month number
@@ -29,7 +30,7 @@
 
   function convertToHtml() {
     converter
-      .convert(md, selectedYear, selectedMonth)
+      .convert(md, selectedYear, selectedMonth, addBorderToImages)
       .then((output) => {
         html = output.html;
         urlErrors = output.errorUrls;
@@ -68,7 +69,7 @@
         <div class="field">
           <div class="control">
             <label class="checkbox">
-              <input type="checkbox" checked />
+              <input type="checkbox" bind:checked={addBorderToImages} />
               Add border to all images
             </label>
           </div>

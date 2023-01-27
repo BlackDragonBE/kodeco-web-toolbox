@@ -4,7 +4,7 @@
 
   let progress = 0;
 
-  export async function convert(markdown, year, month) {
+  export async function convert(markdown, year, month, imageBorders) {
     return new Promise(async (resolve, reject) => {
       progress = 0;
 
@@ -22,7 +22,7 @@
       // DOM manipulation
       let parser = new DOMParser();
       let doc = parser.parseFromString(html, 'text/html');
-      let imageConvertOutput = await convertLocalPathsToUrls(doc, year, month);
+      let imageConvertOutput = await convertLocalPathsToUrls(doc, year, month, imageBorders);
       doc = imageConvertOutput.doc;
       let errorUrls = imageConvertOutput.errorUrls;
 
@@ -66,7 +66,7 @@
     return html;
   }
 
-  function convertLocalPathsToUrls(doc, year, month) {
+  function convertLocalPathsToUrls(doc, year, month, imageBorders) {
     return new Promise((resolve, reject) => {
       let imgElements = doc.getElementsByTagName('img');
 
@@ -100,7 +100,11 @@
         }
 
         // Add image classes
-        imgElements[i].className = 'aligncenter bordered size-full';
+        imgElements[i].className = 'aligncenter size-full';
+
+		if (imageBorders) {
+			imgElements[i].className += " bordered";
+		}
 
         imageExists(mediaUrl + fileName).then(function (exists) {
           resolvedPromises++;
