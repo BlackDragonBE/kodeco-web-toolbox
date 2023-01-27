@@ -179,8 +179,9 @@
 
       // Scan words
       let words = markdown.match(/[\w']+/g);
+      console.log(words.length);
 
-	  // British > American
+      // British > American
       let britishWordProblems = words
         .map(function (word) {
           if (word.toLowerCase() in britishAmericanWordsDict) {
@@ -192,8 +193,8 @@
         .filter((p) => p != null);
       problemsFound.push(...britishWordProblems);
 
-	  // Misspelled > correct
-	  let spellingProblems = words
+      // Misspelled > correct
+      let spellingProblems = words
         .map(function (word) {
           if (word.toLowerCase() in misspellingDict) {
             let correctSpelling = misspellingDict[word.toLowerCase()];
@@ -204,7 +205,10 @@
         .filter((p) => p != null);
       problemsFound.push(...spellingProblems);
 
-    //   console.log(problemsFound);
+      if (!markdown.includes('Where to Go From Here')) {
+        problemsFound.push('Section not found: Where to Go From Here. Please add this section.');
+      }
+
       resolve(problemsFound);
     });
   }
