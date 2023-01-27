@@ -205,6 +205,7 @@
         .filter((p) => p != null);
       problemsFound.push(...spellingProblems);
 
+	  // Sections
       if (!markdown.includes('Where to Go From Here')) {
         problemsFound.push('Section not found: Where to Go From Here. Please add this section.');
       }
