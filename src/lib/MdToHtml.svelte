@@ -92,7 +92,7 @@
     <div class="card-content">
       <div class="content">
         <label for="" class="label">Markdown</label>
-        <textarea class="textarea" id="md" name="md" rows="5" cols="100" bind:value={md} on:drop={dropMarkdown} on:dragover|preventDefault />
+        <textarea class="textarea is-small" id="md" name="md" rows="5" cols="100" bind:value={md} on:drop={dropMarkdown} on:dragover|preventDefault />
         <p class="help">Drag a markdown file above or paste markdown to start converting! You can do a manual re-conversion with the button below.</p>
         <p />
         <div class="columns is-mobile is-centered has-text-centered">
@@ -110,7 +110,7 @@
 
         {#if html.length > 0}
           <label for="" class="label">HTML</label>
-          <textarea class="textarea" id="html" name="html" rows="5" cols="100" readonly placeholder="HTML result will show up here" bind:value={html} />
+          <textarea class="textarea is-small" id="html" name="html" rows="5" cols="100" readonly placeholder="HTML result will show up here" bind:value={html} />
           <p />
           <div class="columns is-mobile is-centered has-text-centered">
             <div class="column is-half">
