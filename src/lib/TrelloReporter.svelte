@@ -1,7 +1,7 @@
 <script>
   import { writable } from 'svelte/store';
   import { onMount } from 'svelte';
-  import { each } from 'svelte/internal';
+  import { each, element } from 'svelte/internal';
 
   let settingsFilledIn;
 
@@ -14,6 +14,11 @@
   let reportListsText = '';
   let ignoredCards = [];
   let ignoredCardsText = '';
+
+  let showTokenPass = false;
+
+  let reportHtml;
+  let iframeHeight = 0;
 
   if (localStorage.getItem('reportLists')) {
     reportLists = JSON.parse(localStorage.getItem('reportLists'));
@@ -59,7 +64,10 @@
 
   $: settingsFilledIn = apiKey.length > 10 && token.length > 10 && boardId.length > 4;
 
-
+  function resizeIframe() {
+    const iframe = document.querySelector('iframe');
+    iframeHeight = iframe.contentWindow.document.body.scrollHeight + 50;
+  }
 
   function createBoardReport() {
     boardLists = [];
@@ -87,36 +95,38 @@
   }
 
   function writeSimpleReport() {
-    let newWin = open('url', 'windowName', 'height=600,width=800');
-    newWin.document.write(`<style>body{font-family: Arial, Helvetica, sans-serif;font-size:small}</style>`);
+	reportHtml = '';
+
+    reportHtml = '<html><body style="background-color:#FFFFFF;">';
+    reportHtml += `<style>body{font-family: Arial, Helvetica, sans-serif;font-size:small}</style>`;
     boardLists.forEach((list) => {
       if (reportLists.includes(list.name)) {
-        newWin.document.write(`<h4>${list.name}</h4>`);
+        reportHtml += `<h4>${list.name}</h4>`;
+
         // console.log('- ', list.name);
         if (list.cards.length == 0) {
-          //   newWin.document.write(`None<br>`);
         }
         list.cards.forEach((card) => {
           if (!ignoredCards.includes(card.name)) {
-            newWin.document.write(`- <a href= "${card.url}">${card.name}</a>`);
+            reportHtml += `- <a href= "${card.url}">${card.name}</a>`;
             if (card.due != null) {
               let daysDiff = dateDiffInDays(new Date(Date.now()), new Date(card.due));
               let dueDate = formatDate(new Date(card.due));
 
               if (daysDiff > 0) {
-                newWin.document.write(` Due: ${dueDate} (in ${daysDiff} days)`);
+                reportHtml += ` Due: ${dueDate} (in ${daysDiff} days)`;
               } else {
-                newWin.document.write(` Due: ${dueDate} (${daysDiff} days ago)`);
+                reportHtml += ` Due: ${dueDate} (${daysDiff} days ago)`;
               }
 
-              newWin.document.write('<br>');
+              reportHtml += '<br>';
             }
           }
         });
       }
     });
 
-    newWin.document.close();
+    reportHtml += '</body></html>';
   }
 </script>
 
@@ -139,13 +149,20 @@
         </div>
         <div class="field">
           <label for="" class="label">Trello Token</label>
-          <div class="control">
-            <input class="input" bind:value={token} />
+          <div class="control has-icons-right">
+            {#if showTokenPass}
+              <input class="input" type="text" bind:value={token} />
+            {:else}
+              <input class="input" type="password" bind:value={token} />
+            {/if}
+            <span class="icon is-small is-right" style="pointer-events: all; cursor: pointer" on:keydown={() => (showTokenPass = !showTokenPass)} on:click={() => (showTokenPass = !showTokenPass)}>
+              <i class={showTokenPass ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} />
+            </span>
           </div>
         </div>
-        <p class="help">The board ID is in the URL of the Trello board: https://trello.com/b/[BOARD ID]</p>
         <div class="field">
           <label for="" class="label">Board ID</label>
+          <p class="help">The board ID is in the URL of the Trello board: https://trello.com/b/[BOARD ID]</p>
           <div class="control">
             <input class="input" bind:value={boardId} />
           </div>
@@ -172,7 +189,7 @@
     <div class="card-content">
       <div class="content">
         {#if settingsFilledIn}
-          <p>Use the button below to generate a board report and open it in a new window. The report can be used in emails to give a simple overview of the team status.</p>
+          <p>Use the button below to generate a board report and show it below. The report can be used in emails to give a simple overview of the team status.</p>
           <div class="columns is-mobile is-centered has-text-centered">
             <div class="column">
               <button class="button is-primary" on:click={createBoardReport}>
@@ -183,24 +200,26 @@
               >
             </div>
           </div>
+          <iframe id="reportFrame" title="Report" width="100%" style="height: {iframeHeight}px;" srcdoc={reportHtml} on:load={resizeIframe} />
         {:else}
           <article class="message is-info is-small">
             <div class="message-header">
               <p>Missing information</p>
             </div>
-            <div class="message-body">Fill in these missing settings first:
-				<ul>
-				{#if apiKey.length < 10}
-				<li>API Key</li>	
-				{/if}
-				{#if token.length < 10}
-				<li>Token</li>	
-				{/if}
-				{#if boardId.length < 4}
-				<li>Board ID</li>	
-				{/if}
-				</ul>
-			</div>
+            <div class="message-body">
+              Fill in these missing settings first:
+              <ul>
+                {#if apiKey.length < 10}
+                  <li>API Key</li>
+                {/if}
+                {#if token.length < 10}
+                  <li>Token</li>
+                {/if}
+                {#if boardId.length < 4}
+                  <li>Board ID</li>
+                {/if}
+              </ul>
+            </div>
           </article>
         {/if}
       </div>
