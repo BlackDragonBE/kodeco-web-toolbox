@@ -1,14 +1,19 @@
 <script>
   import { writable } from 'svelte/store';
   import { onMount } from 'svelte';
+  import { each } from 'svelte/internal';
 
   let settingsFilledIn;
 
   let apiKey = localStorage.getItem('apiKey') || '';
   let token = localStorage.getItem('token') || '';
   let boardId = localStorage.getItem('boardId') || '';
+
+  let boardLists = [];
   let reportLists = [];
   let reportListsText = '';
+  let ignoredCards = [];
+  let ignoredCardsText = '';
 
   if (localStorage.getItem('reportLists')) {
     reportLists = JSON.parse(localStorage.getItem('reportLists'));
@@ -24,38 +29,94 @@
     reportListsText = reportListsText.trim();
   }
 
+  if (localStorage.getItem('ignoredCards')) {
+    ignoredCards = JSON.parse(localStorage.getItem('ignoredCards'));
+    ignoredCards.forEach((list) => {
+      ignoredCardsText += list + '\n';
+    });
+    ignoredCardsText = ignoredCardsText.trim();
+  } else {
+    ignoredCards = [];
+    ignoredCards.forEach((list) => {
+      ignoredCardsText += list.trim() + '\n';
+    });
+    ignoredCardsText = ignoredCardsText.trim();
+  }
+
   $: localStorage.setItem('apiKey', apiKey);
   $: localStorage.setItem('token', token);
   $: localStorage.setItem('boardId', boardId);
+
   $: if (reportListsText.length > 0) {
     reportLists = reportListsText.split('\n');
     localStorage.setItem('reportLists', JSON.stringify(reportLists));
   }
 
+  $: if (ignoredCardsText.length > 0) {
+    ignoredCards = ignoredCardsText.split('\n');
+    localStorage.setItem('ignoredCards', JSON.stringify(ignoredCards));
+  }
+
   $: settingsFilledIn = apiKey.length > 10 && token.length > 10 && boardId.length > 4;
 
-  let boardMembers = [];
-  let boardLists = [];
 
-  // Any card with a name in this list will be ignored. This is useful to filter out utility or informational cards.
-  let ignoredCardTitles = ['How do I do an FPE Spot Check?', 'How to Assign An Editor'];
 
   function createBoardReport() {
-    // Members
-    // fetch(`https://api.trello.com/1/boards/${boardId}/members?key=${apiKey}&token=${token}`)
-    //   .then((response) => response.json())
-    //   .then((members) => {
-    //     boardMembers = members;
-    //     console.log(boardMembers);
-    //   });
-
-    // Lists
-    fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${apiKey}&token=${token}&cards=all&filter=open`)
+    boardLists = [];
+    // Get Lists
+    fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${apiKey}&token=${token}&cards=open&filter=open`)
       .then((response) => response.json())
       .then((lists) => {
         boardLists = lists;
-        console.log(boardLists);
+        writeSimpleReport();
       });
+  }
+
+  function formatDate(date) {
+    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  function dateDiffInDays(a, b) {
+    const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+    // Discard the time and time-zone information.
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+  }
+
+  function writeSimpleReport() {
+    let newWin = open('url', 'windowName', 'height=600,width=800');
+    newWin.document.write(`<style>body{font-family: Arial, Helvetica, sans-serif;font-size:small}</style>`);
+    boardLists.forEach((list) => {
+      if (reportLists.includes(list.name)) {
+        newWin.document.write(`<h4>${list.name}</h4>`);
+        // console.log('- ', list.name);
+        if (list.cards.length == 0) {
+          //   newWin.document.write(`None<br>`);
+        }
+        list.cards.forEach((card) => {
+          if (!ignoredCards.includes(card.name)) {
+            newWin.document.write(`- <a href= "${card.url}">${card.name}</a>`);
+            if (card.due != null) {
+              let daysDiff = dateDiffInDays(new Date(Date.now()), new Date(card.due));
+              let dueDate = formatDate(new Date(card.due));
+
+              if (daysDiff > 0) {
+                newWin.document.write(` Due: ${dueDate} (in ${daysDiff} days)`);
+              } else {
+                newWin.document.write(` Due: ${dueDate} (${daysDiff} days ago)`);
+              }
+
+              newWin.document.write('<br>');
+            }
+          }
+        });
+      }
+    });
+
+    newWin.document.close();
   }
 </script>
 
@@ -93,6 +154,11 @@
           <label for="" class="label">Board lists to report</label>
           <textarea rows="10" class="textarea is-small auto_height" bind:value={reportListsText} />
         </div>
+        <div class="field">
+          <label for="" class="label">Cards names to ignore</label>
+          <p class="help">The card names in this list won't be included in the report.</p>
+          <textarea rows="10" class="textarea is-small auto_height" bind:value={ignoredCardsText} />
+        </div>
       </div>
     </div>
   </div>
@@ -105,18 +171,8 @@
     </header>
     <div class="card-content">
       <div class="content">
-        <article class="message is-warning is-small">
-          <div class="message-header">
-            <p>
-              <span class="icon">
-                <i class="fas fa-circle-exclamation" />
-              </span>Here be dragons
-            </p>
-          </div>
-          <div class="message-body">This feature isn't fully implemented yet.</div>
-        </article>
-
         {#if settingsFilledIn}
+          <p>Use the button below to generate a board report and open it in a new window. The report can be used in emails to give a simple overview of the team status.</p>
           <div class="columns is-mobile is-centered has-text-centered">
             <div class="column">
               <button class="button is-primary" on:click={createBoardReport}>
@@ -125,9 +181,6 @@
                 </span>
                 <span>Create board report</span></button
               >
-              {#each boardLists as list}
-                <div class="card listcard p-2 my-2">{list.name}</div>
-              {/each}
             </div>
           </div>
         {:else}
@@ -135,7 +188,19 @@
             <div class="message-header">
               <p>Missing information</p>
             </div>
-            <div class="message-body">Fill in the settings first.</div>
+            <div class="message-body">Fill in these missing settings first:
+				<ul>
+				{#if apiKey.length < 10}
+				<li>API Key</li>	
+				{/if}
+				{#if token.length < 10}
+				<li>Token</li>	
+				{/if}
+				{#if boardId.length < 4}
+				<li>Board ID</li>	
+				{/if}
+				</ul>
+			</div>
           </article>
         {/if}
       </div>
