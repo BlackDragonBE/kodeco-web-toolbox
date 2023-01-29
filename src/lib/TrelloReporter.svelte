@@ -17,7 +17,7 @@
 
   let showTokenPass = false;
 
-  let reportHtml;
+  let reportHtml = '';
   let iframeHeight = 0;
 
   if (localStorage.getItem('reportLists')) {
@@ -200,7 +200,9 @@
               >
             </div>
           </div>
+		  {#if reportHtml.length > 0}
           <iframe id="reportFrame" title="Report" width="100%" style="height: {iframeHeight}px;" srcdoc={reportHtml} on:load={resizeIframe} />
+		  {/if}
         {:else}
           <article class="message is-info is-small">
             <div class="message-header">
