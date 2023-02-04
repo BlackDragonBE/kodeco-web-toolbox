@@ -57,9 +57,9 @@ _This is italic text_
       * carrots
       * celery
       * lentils
- 2. Now boil some water.
- 3. Dump everything in the pot.
- 4. Enjoy!
+2. Now boil some water.
+3. Dump everything in the pot.
+4. Enjoy!
 
 ### Hyperlinks
 
@@ -94,7 +94,7 @@ Simply add text between the square brackets of an image tag to add alt text. Thi
 >**Note**: Remember, you can add images to notes! 
 >![](images/Test.png)
 
-### Spoiler (RWHTML specific)
+### Spoiler (Kodeco specific)
 
 [spoiler title="Solution Inside: Can't remember how to scale?"]
 Press the **S** key, move inwards with your cursor and click to confirm.
