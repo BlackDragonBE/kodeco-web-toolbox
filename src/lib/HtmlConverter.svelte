@@ -32,6 +32,9 @@
 
       // @ts-ignore
       let output = turndownService.turndown(html);
+
+	  output = output.replaceAll('\\[', '[');
+	  output = output.replaceAll('\\]', ']');
       resolve(output);
     });
   }
