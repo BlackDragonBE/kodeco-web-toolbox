@@ -24,6 +24,7 @@
       let doc = parser.parseFromString(html, 'text/html');
       let imageConvertOutput = await convertLocalPathsToUrls(doc, year, month, imageBorders);
       doc = imageConvertOutput.doc;
+      doc = await addLinkAttributes(doc);
       let errorUrls = imageConvertOutput.errorUrls;
 
       let scanErrors = await scanMarkdown(markdown);
@@ -142,6 +143,19 @@
         resolve(false);
       };
       image.src = url;
+    });
+  }
+
+  function addLinkAttributes(doc) {
+    return new Promise((resolve, reject) => {
+      let links = doc.getElementsByTagName('a');
+
+      for (let i = 0; i < links.length; i++) {
+        links[i].target = '_blank';
+        links[i].rel = 'noopener noreferrer nofollow';
+      }
+
+      resolve(doc);
     });
   }
 
