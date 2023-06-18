@@ -67,6 +67,14 @@
     return html;
   }
 
+  /**
+   * Converts local image paths in a document to URLs pointing to remote images
+   * @param {Document} doc - The document to modify
+   * @param {number} year - The year of the remote image URL
+   * @param {number} month - The month of the remote image URL
+   * @param {boolean} imageBorders - Whether or not to add borders to images
+   * @returns {Promise<{doc: Document, errorUrls: string[]}>} - A promise that resolves with the modified document and a list of any image URLs that could not be loaded
+   */
   function convertLocalPathsToUrls(doc, year, month, imageBorders) {
     return new Promise((resolve, reject) => {
       let imgElements = doc.getElementsByTagName('img');
@@ -80,17 +88,13 @@
         resolve(output);
       }
 
-      //   const today = new Date();
-      //   const year = today.getFullYear();
-      //   const month = today.getMonth() + 1; // getMonth() returns a 0-based index, so we need to add 1 to get the actual month number
-      //   const formattedDate = year + '/' + (month < 10 ? '0' + month : month);
-
       let mediaUrl = 'https://files.koenig.kodeco.com/uploads/' + year + '/' + month + '/';
 
       let totalPromises = imgElements.length;
       let resolvedPromises = 0;
       let errorUrls = [];
 
+      // Iterate over all image elements in the document
       for (let i = 0; i < imgElements.length; i++) {
         let urlParts = imgElements[i].src.split('/');
         let fileName = urlParts[urlParts.length - 1];
@@ -107,6 +111,13 @@
           imgElements[i].className += ' bordered';
         }
 
+        // Wrap the img element in an a tag
+        let aElement = document.createElement('a');
+        aElement.href = imgElements[i].src;
+        imgElements[i].parentNode.insertBefore(aElement, imgElements[i]);
+        aElement.appendChild(imgElements[i]);
+
+        // Check if image exists
         checkIfImageExists(imgElements[i].src).then(function (exists) {
           resolvedPromises++;
           progress = (resolvedPromises / imgElements.length) * 100;
@@ -131,6 +142,7 @@
     });
   }
 
+  // Check if image exists
   function checkIfImageExists(url) {
     return new Promise(function (resolve, reject) {
       let image = new Image();
@@ -165,6 +177,7 @@
     return html;
   }
 
+  // Scan markdown
   async function scanMarkdown(markdown) {
     return new Promise(async (resolve, reject) => {
       let problemsFound = [];
