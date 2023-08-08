@@ -129,7 +129,9 @@
           figureElement.appendChild(aElement);
 
           // Add figcaption
-          figureElement.appendChild(document.createElement('figcaption'));
+          var figcaption = figureElement.appendChild(document.createElement('figcaption'));
+          // Add figcaption class to figcaption element
+          figcaption.className = 'figcaption';
           figureElement.children[1].innerHTML = caption;
         }
 
