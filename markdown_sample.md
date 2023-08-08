@@ -77,6 +77,12 @@ Simply add text between the square brackets of an image tag to add alt text. Thi
 
 ![Blender's splash screen with user options below it](images/Test.png)
 
+### Image with alt text and caption
+
+Add a pipe ( | ) to split the alt text and its caption.
+
+![Blender's splash screen with user options below it|Blender splash screen, a 3D sheep with laser eyes](images/Test.png)
+
 ## Notes
 
 ### Simple Note
