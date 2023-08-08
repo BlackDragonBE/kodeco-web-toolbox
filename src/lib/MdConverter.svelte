@@ -117,6 +117,22 @@
         imgElements[i].parentNode.insertBefore(aElement, imgElements[i]);
         aElement.appendChild(imgElements[i]);
 
+        // Get split alt text with a pipe. First part is the alt, second part is the caption
+        var split = imgElements[i].alt.split('|');
+        imgElements[i].alt = split[0];
+        if (split.length > 1) {
+          var caption = split[1];
+          
+          // Wrap the a element in a figure tag
+          let figureElement = document.createElement('figure');
+          aElement.parentNode.insertBefore(figureElement, aElement);
+          figureElement.appendChild(aElement);
+
+          // Add figcaption
+          figureElement.appendChild(document.createElement('figcaption'));
+          figureElement.children[1].innerHTML = caption;
+        }
+
         // Check if image exists
         checkIfImageExists(imgElements[i].src).then(function (exists) {
           resolvedPromises++;
