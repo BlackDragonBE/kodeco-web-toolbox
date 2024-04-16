@@ -1,4 +1,4 @@
-Hosted on Github Pages: [https://blackdragonbe.github.io/kodeco-web-toolbox](https://blackdragonbe.github.io/kodeco-web-toolbox)
+Hosted on GitHub Pages: [https://blackdragonbe.github.io/kodeco-web-toolbox](https://blackdragonbe.github.io/kodeco-web-toolbox)
 
 ## Building and running
 
@@ -18,7 +18,7 @@ npm run dev -- --open
 
 ### Deploy to gh-pages
 
-Build and deploy to Github Pages:
+Build and deploy to GitHub Pages:
 
 ```
 npm run build

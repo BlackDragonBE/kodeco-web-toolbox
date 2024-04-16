@@ -3,12 +3,14 @@
   import HtmlToMd from './lib/HtmlToMd.svelte';
   import MdToHtml from './lib/MdToHtml.svelte';
   import TrelloReporter from './lib/TrelloReporter.svelte';
+  import AsanaReporter from './lib/AsanaReporter.svelte';
   import { onMount } from 'svelte';
 
   const Mode = {
     MdToHtml: Symbol('md_to_html'),
     HtmlToMd: Symbol('html_to_md'),
     TrelloReport: Symbol('trello_report'),
+    AsanaReport: Symbol('asana_report'),
     About: Symbol('about'),
   };
 
@@ -17,8 +19,7 @@
   onMount(async () => {});
 </script>
 
-
-<img class="logo mt-1 mx-4" src="images/kodeco-toolbox.png" alt="Kodeco Web Toolbox">
+<img class="logo mt-1 mx-4" src="images/kodeco-toolbox.png" alt="Kodeco Web Toolbox" />
 <div class="columns is-desktop">
   <aside class="column is-narrow section">
     <p class="menu-label is-hidden-touch">Menu</p>
@@ -61,6 +62,18 @@
       <li>
         <a
           href="#/"
+          class=""
+          class:is-active={appMode == Mode.AsanaReport}
+          on:click={() => {
+            appMode = Mode.AsanaReport;
+          }}
+        >
+          <span class="icon"><i class="fa-regular fa-file" /></span> Asana Reporter
+        </a>
+      </li>
+      <li>
+        <a
+          href="#/"
           class:is-active={appMode == Mode.About}
           on:click={() => {
             appMode = Mode.About;
@@ -78,6 +91,8 @@
     <HtmlToMd />
   {:else if appMode == Mode.TrelloReport}
     <TrelloReporter />
+  {:else if appMode == Mode.AsanaReport}
+    <AsanaReporter />
   {:else if appMode == Mode.About}
     <About />
   {/if}

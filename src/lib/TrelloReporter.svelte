@@ -189,7 +189,7 @@
     <div class="card-content">
       <div class="content">
         {#if settingsFilledIn}
-          <p>Use the button below to generate a board report and show it below. The report can be used in emails to give a simple overview of the team status.</p>
+          <p>Use the button below to generate a board report. The report can be used in emails to give a simple overview of the team status.</p>
           <div class="columns is-mobile is-centered has-text-centered">
             <div class="column">
               <button class="button is-primary" on:click={createBoardReport}>
