@@ -4,9 +4,20 @@
 
   let progress = 0;
 
+  function replaceSpacesInImagePaths(markdown) {
+    const regex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+    return markdown.replace(regex, (match, alt, path) => {
+      const newPath = path.replace(/\s+/g, '-');
+      return `![${alt}](${newPath})`;
+    });
+  }
+
   export async function convert(markdown, year, month, imageBorders) {
     return new Promise(async (resolve, reject) => {
       progress = 0;
+
+      // Replace spaces with hyphens in image paths
+      markdown = replaceSpacesInImagePaths(markdown);
 
       let converter = new Converter();
       converter.setOption('noHeaderId', true);
