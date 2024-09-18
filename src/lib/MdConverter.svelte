@@ -15,6 +15,7 @@
 
       let html = '';
       html = converter.makeHtml(markdown);
+      console.log(html);
 
       // Simple replaces
       html = performSimpleReplacements(html);
