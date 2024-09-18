@@ -8,31 +8,35 @@
     // Find all image paths
     const regex = /!\[([^\]]*)\]\(([^)]+)\)/g;
     return markdown.replace(regex, (match, alt, path) => {
-      // Encode special characters in the path
-      let encodedPath = encodeURIComponent(path);
       
-      // Decode specific characters back
-      encodedPath = encodedPath
-        .replace(/%20/g, '-')  // Replace encoded spaces with hyphens
-        .replace(/%2C/g, ',')  // Keep commas
-        .replace(/%2E/g, '.')  // Keep periods
-        .replace(/%2F/g, '/'); // Keep forward slashes
 
-      // Remove any remaining percent-encodings
-      encodedPath = encodedPath.replace(/%[0-9A-Fa-f]{2}/g, '');
+      // Replace %27, %28 and %29 with nothing
+      path = path.replace(/%27/g, '');
+      path = path.replace(/%28/g, '');
+      path = path.replace(/%29/g, '');
+      // Replace single and double quotes with nothing
+      path = path.replace(/'/g, '');
+      path = path.replace(/"/g, '');
+      // Replace brackets with nothing
+      path = path.replace(/\[/g, '');
+      path = path.replace(/\]/g, '');
+      // Replace round brackets with nothing
+      path = path.replace(/\(/g, '');
+      path = path.replace(/\)/g, '');
 
-      // Replace multiple hyphens with a single hyphen
-      encodedPath = encodedPath.replace(/-+/g, '-');
 
-      // Remove hyphens after slashes
-      encodedPath = encodedPath.replace(/\/-/g, '/');
+      // Replace spaces with hyphens
+      var newPath = path.replace(/\s+/g, '-');
+      // Replace triple hyphens with single hyphens
+      newPath = newPath.replace(/---/g, '-');
 
-      // Remove leading and trailing hyphens
-      encodedPath = encodedPath.replace(/^-|-$/g, '');
+      // If a path has a slash followed by a hyphen, remove the hyphen
+      if (newPath.includes('/-')) {
+        newPath = newPath.replace('/-', '/');
+      }
+      console.log(alt + ' - ' + path + ' -> ' + newPath);
 
-      console.log(alt + ' - ' + path + ' -> ' + encodedPath);
-
-      return `![${alt}](${encodedPath})`;
+      return `![${alt}](${newPath})`;
     });
   }
 
