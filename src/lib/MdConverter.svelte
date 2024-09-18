@@ -4,10 +4,38 @@
 
   let progress = 0;
 
-  function replaceSpacesInImagePaths(markdown) {
+  function cleanMarkdown(markdown) {
+    // Find all image paths
     const regex = /!\[([^\]]*)\]\(([^)]+)\)/g;
     return markdown.replace(regex, (match, alt, path) => {
-      const newPath = path.replace(/\s+/g, '-');
+      
+
+      // Replace %27, %28 and %29 with nothing
+      path = path.replace(/%27/g, '');
+      path = path.replace(/%28/g, '');
+      path = path.replace(/%29/g, '');
+      // Replace single and double quotes with nothing
+      path = path.replace(/'/g, '');
+      path = path.replace(/"/g, '');
+      // Replace brackets with nothing
+      path = path.replace(/\[/g, '');
+      path = path.replace(/\]/g, '');
+      // Replace round brackets with nothing
+      path = path.replace(/\(/g, '');
+      path = path.replace(/\)/g, '');
+
+
+      // Replace spaces with hyphens
+      var newPath = path.replace(/\s+/g, '-');
+      // Replace triple hyphens with single hyphens
+      newPath = newPath.replace(/---/g, '-');
+
+      // If a path has a slash followed by a hyphen, remove the hyphen
+      if (newPath.includes('/-')) {
+        newPath = newPath.replace('/-', '/');
+      }
+      console.log(alt + ' - ' + path + ' -> ' + newPath);
+
       return `![${alt}](${newPath})`;
     });
   }
@@ -17,7 +45,7 @@
       progress = 0;
 
       // Replace spaces with hyphens in image paths
-      markdown = replaceSpacesInImagePaths(markdown);
+      markdown = cleanMarkdown(markdown);
 
       let converter = new Converter();
       converter.setOption('noHeaderId', true);
@@ -26,7 +54,6 @@
 
       let html = '';
       html = converter.makeHtml(markdown);
-      console.log(html);
 
       // Simple replaces
       html = performSimpleReplacements(html);
