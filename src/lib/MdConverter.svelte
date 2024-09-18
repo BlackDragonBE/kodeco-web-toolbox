@@ -5,15 +5,13 @@
   let progress = 0;
 
   function cleanMarkdown(markdown) {
-    // Find all image paths
-    const regex = /!\[([^\]]*)\]\(([^)]+)\)/g;
-    return markdown.replace(regex, (match, alt, path) => {
-      
+    // Find all markdown images, group by alt and path
+    const regex = /!\[([^\]]*)\]\(([^()]+(?:\([^()]*\))?[^)]*)\)/g;
 
-      // Replace %27, %28 and %29 with nothing
-      path = path.replace(/%27/g, '');
-      path = path.replace(/%28/g, '');
-      path = path.replace(/%29/g, '');
+    return markdown.replace(regex, (match, alt, path) => {
+      // Decode the path
+      path = decodeURIComponent(path);
+
       // Replace single and double quotes with nothing
       path = path.replace(/'/g, '');
       path = path.replace(/"/g, '');
@@ -23,7 +21,6 @@
       // Replace round brackets with nothing
       path = path.replace(/\(/g, '');
       path = path.replace(/\)/g, '');
-
 
       // Replace spaces with hyphens
       var newPath = path.replace(/\s+/g, '-');
